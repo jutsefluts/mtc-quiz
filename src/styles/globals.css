@@ -1,0 +1,124 @@
+/* eslint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* eslint-enable */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+  --medical-blue: #007bff;
+  --medical-green: #28a745;
+  --medical-red: #dc3545;
+  --medical-gray: #6c757d;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: lightblue !important;
+  color: #333;
+}
+
+.medical-container {
+  @apply max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-8 !important;
+  border: 2px solid var(--medical-blue) !important;
+}
+
+.medical-title {
+  @apply text-3xl font-bold mb-8 text-center;
+  color: var(--medical-blue);
+}
+
+.medical-button {
+  @apply w-full p-3 rounded-lg transition-all duration-300 font-semibold;
+}
+
+.medical-button:not(:disabled) {
+  @apply hover:shadow-md transform hover:-translate-y-1;
+}
+
+.medical-button-correct {
+  background-color: var(--medical-green);
+  color: white;
+}
+
+.medical-button-incorrect {
+  background-color: var(--medical-red);
+  color: white;
+}
+
+.medical-button-neutral {
+  background-color: #e9ecef;
+  color: var(--medical-gray);
+}
+
+.medical-next-button {
+  @apply mt-6 w-full p-6 font-bold rounded-full transition-all duration-300 transform;
+  background-color: var(--medical-blue);
+  color: white;
+}
+
+.medical-next-button:not(:disabled):hover {
+  @apply -translate-y-1 shadow-lg;
+  background-color: #0056b3;
+}
+
+.medical-score {
+  @apply mt-6 text-center font-semibold text-xl;
+  color: var(--medical-blue);
+}
+
+.medical-feedback {
+  @apply mt-6 p-6 text-center rounded-full font-semibold;
+}
+
+.medical-feedback-correct {
+  background-color: #d4edda;
+  color: var(--medical-green);
+}
+
+.medical-feedback-incorrect {
+  background-color: #f8d7da;
+  color: var(--medical-red);
+}
+
+.medical-loading {
+  @apply text-center text-xl p-6;
+  color: var(--medical-blue);
+}
+
+.medical-icon {
+  @apply inline-block w-6 h-6 mr-2;
+}
+
+.medical-option {
+  @apply w-full p-6 text-left rounded-full transition-all duration-300 font-semibold mb-4;
+  background-color: #e8f0fe;
+  border: 2px solid var(--color-medical-blue);
+  color: var(--color-medical-blue);
+}
+
+.medical-option:not(:disabled):hover {
+  @apply shadow-md -translate-y-1;
+  background-color: #d0e3ff;
+}
+
+.medical-option-correct {
+  background-color: #d4edda;
+  border-color: var(--color-medical-green);
+  color: var(--color-medical-green);
+}
+
+.medical-option-incorrect {
+  background-color: #f8d7da;
+  border-color: var(--color-medical-red);
+  color: var(--color-medical-red);
+}
+
+.medical-option-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+}
