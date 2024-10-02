@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-1106",
       messages: [
-        { role: "system", content: "Je bent een behulpzame assistent die korte, duidelijke uitleg geeft in het Nederlands. Beperk je antwoorden tot maximaal twee zinnen." },
+        { role: "system", content: "Je bent een behulpzame assistent die korte, duidelijke uitleg geeft in het Nederlands over medische termen. Leg de relatie tussen woorden en hun beschrijvingen uit zonder te oordelen over juist of onjuist. Beperk je antwoorden tot maximaal twee zinnen." },
         { role: "user", content: prompt }
       ],
       max_tokens: 100,

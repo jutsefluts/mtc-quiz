@@ -20,21 +20,24 @@ body {
 }
 
 .medical-container {
-  @apply max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-8 !important;
-  border: 2px solid var(--medical-blue) !important;
+  @apply max-w-xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6;
+  border: 2px solid var(--medical-blue);
 }
 
 .medical-title {
-  @apply text-3xl font-bold mb-8 text-center;
+  @apply text-2xl font-bold mb-4 text-center;
   color: var(--medical-blue);
 }
 
 .medical-button {
-  @apply w-full p-3 rounded-lg transition-all duration-300 font-semibold;
+  @apply w-full p-4 rounded-lg transition-all duration-300 font-semibold;
+  background-color: var(--medical-blue);
+  color: white;
 }
 
-.medical-button:not(:disabled) {
-  @apply hover:shadow-md transform hover:-translate-y-1;
+.medical-button:hover {
+  @apply shadow-md transform hover:-translate-y-1;
+  background-color: #0056b3;
 }
 
 .medical-button-correct {
@@ -53,7 +56,7 @@ body {
 }
 
 .medical-next-button {
-  @apply mt-6 w-full p-6 font-bold rounded-full transition-all duration-300 transform;
+  @apply mt-4 w-full p-4 font-bold rounded-full transition-all duration-300 transform;
   background-color: var(--medical-blue);
   color: white;
 }
@@ -64,7 +67,7 @@ body {
 }
 
 .medical-score {
-  @apply mt-6 text-center font-semibold text-xl;
+  @apply mt-4 text-center font-semibold text-lg;
   color: var(--medical-blue);
 }
 
@@ -92,7 +95,7 @@ body {
 }
 
 .medical-option {
-  @apply w-full p-6 text-left rounded-full transition-all duration-300 font-semibold mb-4 relative;
+  @apply w-full p-4 text-left rounded-full transition-all duration-300 font-semibold relative;
   background-color: #e8f0fe;
   border: 2px solid var(--medical-blue);
   color: var(--medical-blue);
@@ -121,6 +124,19 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.5rem;
+}
+
+.medical-logout-button {
+  @apply absolute top-1 right-1 text-xs p-1 !important;
+  width: auto !important;
+}
+
+.medical-question-prefix {
+  @apply text-sm text-gray-600 italic;
+}
+
+.medical-word {
+  @apply text-2xl font-bold text-center text-medical-blue mb-4;
 }
 
 /* Remove these classes as they're no longer needed

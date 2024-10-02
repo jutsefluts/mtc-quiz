@@ -1,8 +1,13 @@
-import { supabase } from './client'
+import { createClient } from '@supabase/supabase-js'
 import { QuizWord } from '@/types/quiz'
 
 console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
 console.log('Supabase Anon Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 5) + '...')
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 export async function fetchQuizWords(count: number = 20): Promise<QuizWord[]> {
   console.log('Fetching quiz words from Supabase...')
@@ -22,3 +27,5 @@ export async function fetchQuizWords(count: number = 20): Promise<QuizWord[]> {
   console.log('Fetched quiz words:', selected)
   return selected
 }
+
+export { supabase }
