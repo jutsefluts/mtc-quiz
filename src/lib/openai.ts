@@ -1,4 +1,4 @@
-export async function generateExplanation(prompt: string, signal?: AbortSignal): Promise<string> {
+export async function generateExplanation(prompt: string): Promise<string> {
   try {
     const response = await fetch('/api/generate-explanation', {
       method: 'POST',
@@ -6,7 +6,6 @@ export async function generateExplanation(prompt: string, signal?: AbortSignal):
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ prompt }),
-      signal,
     });
 
     if (!response.ok) {
@@ -15,15 +14,8 @@ export async function generateExplanation(prompt: string, signal?: AbortSignal):
 
     const data = await response.json();
     return data.explanation;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        throw error; // Re-throw AbortError to be caught in the component
-      }
-      console.error("Error generating explanation:", error.message);
-    } else {
-      console.error("An unknown error occurred");
-    }
+  } catch (error) {
+    console.error("Error generating explanation:", error);
     return "Error generating explanation. Please try again later.";
   }
 }

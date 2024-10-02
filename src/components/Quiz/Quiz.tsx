@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from '@supabase/supabase-js';
 import { generateExplanation } from "@/utils/openai";
 import { motion, AnimatePresence } from 'framer-motion';
+import QuizQuestion from './QuizQuestion';
+import QuizOptions from './QuizOptions';
+import QuizFeedback from './QuizFeedback';
+import QuizResult from './QuizResult';
 
 interface Word {
   id: number;
@@ -27,12 +31,23 @@ const Quiz: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [badges, setBadges] = useState<string[]>([]);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [questionKey, setQuestionKey] = useState(0);
 
   const supabase = createClientComponentClient();
+
+  const explanationRequestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     fetchWords();
   }, []);
+
+  useEffect(() => {
+    if (quizState === 'inProgress') {
+      setExplanation(null);
+      setFeedback(null);
+      setupNewQuestion();
+    }
+  }, [questionKey, quizState]);
 
   async function getUser() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -107,43 +122,33 @@ const Quiz: React.FC = () => {
     }
   };
 
-  const nextQuestion = () => {
+  const setupNewQuestion = () => {
     if (questionCount < words.length) {
       const newQuestion = words[questionCount];
       setCurrentQuestion(newQuestion);
       
-      // Bepaal willekeurig of we het woord of de beschrijving als vraag tonen
       const showWordAsQuestion = Math.random() < 0.5;
       setIsQuestionWord(showWordAsQuestion);
       
-      let questionText: string;
       let correctAnswer: string;
       let otherOptions: string[];
 
       if (showWordAsQuestion) {
-        // We tonen het woord als vraag
-        questionText = newQuestion.word;
         correctAnswer = newQuestion.description;
-        // Haal alle andere beschrijvingen op, behalve die van het huidige woord
         otherOptions = words
           .filter(w => w.id !== newQuestion.id)
           .map(w => w.description);
       } else {
-        // We tonen de beschrijving als vraag
-        questionText = newQuestion.description;
         correctAnswer = newQuestion.word;
-        // Haal alle andere woorden op, behalve het huidige woord
         otherOptions = words
           .filter(w => w.id !== newQuestion.id)
           .map(w => w.word);
       }
 
-      // Kies willekeurig 2 andere opties
       otherOptions = otherOptions
         .sort(() => 0.5 - Math.random())
         .slice(0, 2);
 
-      // Voeg het juiste antwoord toe en schud de opties
       const allOptions = [correctAnswer, ...otherOptions].sort(() => 0.5 - Math.random());
 
       setOptions(allOptions);
@@ -154,6 +159,17 @@ const Quiz: React.FC = () => {
     } else {
       endQuiz();
     }
+  };
+
+  const nextQuestion = () => {
+    // Cancel any ongoing explanation request
+    if (explanationRequestRef.current) {
+      explanationRequestRef.current.abort();
+    }
+
+    setExplanation(null);
+    setFeedback(null);
+    setQuestionKey(prevKey => prevKey + 1);
   };
 
   const handleAnswer = async (selectedOption: string) => {
@@ -174,11 +190,27 @@ const Quiz: React.FC = () => {
     }
 
     if (currentQuestion) {
+      // Cancel any ongoing explanation request
+      if (explanationRequestRef.current) {
+        explanationRequestRef.current.abort();
+      }
+
+      // Create a new AbortController for this request
+      explanationRequestRef.current = new AbortController();
+
       const prompt = `Leg kort uit waarom "${currentQuestion.word}" en "${currentQuestion.description}" bij elkaar horen. Geef geen beoordeling over juist of onjuist, focus alleen op de uitleg.`;
-      generateExplanation(prompt).then(setExplanation).catch(error => {
-        console.error('Error generating explanation:', error);
-        setExplanation("Er kon geen uitleg worden gegenereerd. Probeer het later opnieuw.");
-      });
+      
+      try {
+        const explanation = await generateExplanation(prompt, explanationRequestRef.current.signal);
+        setExplanation(explanation);
+      } catch (error: unknown) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.log('Explanation request was cancelled');
+        } else {
+          console.error('Error generating explanation:', error);
+          setExplanation("Er kon geen uitleg worden gegenereerd. Probeer het later opnieuw.");
+        }
+      }
     }
   };
 
@@ -225,7 +257,7 @@ const Quiz: React.FC = () => {
       {quizState === 'inProgress' && (
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentQuestion?.id}
+            key={questionKey}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -233,43 +265,24 @@ const Quiz: React.FC = () => {
           >
             {currentQuestion && (
               <>
-                <p className="medical-question-prefix mb-2">
-                  {isQuestionWord ? "Wat hoort er bij..." : "Bij welk woord hoort..."}
-                </p>
-                <h2 className="medical-word mb-6">
-                  {isQuestionWord ? currentQuestion.word : currentQuestion.description}
-                </h2>
-                <div className="space-y-4">
-                  {options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswer(option)}
-                      className={`medical-option ${
-                        showResult && selectedOption === option
-                          ? selectedOption === (isQuestionWord ? currentQuestion.description : currentQuestion.word)
-                            ? 'medical-option-correct'
-                            : 'medical-option-incorrect'
-                          : ''
-                      }`}
-                      disabled={showResult}
-                    >
-                      {option}
-                      {showResult && selectedOption === option && (
-                        <span className="medical-option-icon">
-                          {selectedOption === (isQuestionWord ? currentQuestion.description : currentQuestion.word) ? '✓' : '✗'}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
+                <QuizQuestion 
+                  question={isQuestionWord ? currentQuestion.word : currentQuestion.description}
+                  isQuestionWord={isQuestionWord}
+                />
+                <QuizOptions
+                  options={options}
+                  handleAnswer={handleAnswer}
+                  selectedOption={selectedOption}
+                  showResult={showResult}
+                  correctAnswer={isQuestionWord ? currentQuestion.description : currentQuestion.word}
+                />
                 {showResult && (
-                  <div className="result">
-                    <p className="mt-4">{feedback}</p>
-                    {explanation && <p className="mt-4">{explanation}</p>}
+                  <>
+                    <QuizFeedback feedback={feedback} explanation={explanation} />
                     <button onClick={nextQuestion} className="medical-next-button">
                       Volgend Woord
                     </button>
-                  </div>
+                  </>
                 )}
               </>
             )}
@@ -278,23 +291,12 @@ const Quiz: React.FC = () => {
       )}
 
       {quizState === 'end' && (
-        <div className="end-screen">
-          <h2 className="medical-title">Quiz Voltooid!</h2>
-          <p className="medical-score">Jouw score: {score}/{words.length}</p>
-          {badges.length > 0 && (
-            <div className="badges mt-4">
-              <h3>Behaalde badges:</h3>
-              <ul>
-                {badges.map((badge, index) => (
-                  <li key={index}>{badge}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <button onClick={restartQuiz} className="medical-button mt-4">
-            Quiz opnieuw starten
-          </button>
-        </div>
+        <QuizResult
+          score={score}
+          totalQuestions={words.length}
+          badges={badges}
+          restartQuiz={restartQuiz}
+        />
       )}
     </div>
   );
