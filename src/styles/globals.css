@@ -92,10 +92,10 @@ body {
 }
 
 .medical-option {
-  @apply w-full p-6 text-left rounded-full transition-all duration-300 font-semibold mb-4;
+  @apply w-full p-6 text-left rounded-full transition-all duration-300 font-semibold mb-4 relative;
   background-color: #e8f0fe;
-  border: 2px solid var(--color-medical-blue);
-  color: var(--color-medical-blue);
+  border: 2px solid var(--medical-blue);
+  color: var(--medical-blue);
 }
 
 .medical-option:not(:disabled):hover {
@@ -104,15 +104,15 @@ body {
 }
 
 .medical-option-correct {
-  background-color: #d4edda;
-  border-color: var(--color-medical-green);
-  color: var(--color-medical-green);
+  background-color: var(--medical-green);
+  border-color: var(--medical-green);
+  color: white;
 }
 
 .medical-option-incorrect {
-  background-color: #f8d7da;
-  border-color: var(--color-medical-red);
-  color: var(--color-medical-red);
+  background-color: var(--medical-red);
+  border-color: var(--medical-red);
+  color: white;
 }
 
 .medical-option-icon {
@@ -122,3 +122,11 @@ body {
   transform: translateY(-50%);
   font-size: 1.5rem;
 }
+
+/* Remove these classes as they're no longer needed
+.medical-feedback,
+.medical-feedback-correct,
+.medical-feedback-incorrect {
+  display: none;
+}
+*/
