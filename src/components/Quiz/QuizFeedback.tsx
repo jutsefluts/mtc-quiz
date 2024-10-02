@@ -6,15 +6,18 @@ interface QuizFeedbackProps {
 }
 
 const QuizFeedback: React.FC<QuizFeedbackProps> = ({ feedback, explanation }) => (
-  <div className="result">
-    <div className="feedback-container">
-      <p className="feedback-text">{feedback}</p>
-      {explanation && (
-        <div className="ai-feedback">
-          <p>{explanation}</p>
-        </div>
-      )}
-    </div>
+  <div className="feedback-container">
+    {feedback && (
+      <>
+        <p className="correctness-feedback">{feedback}</p>
+        {explanation && <hr className="feedback-divider" />}
+      </>
+    )}
+    {explanation && (
+      <div className="ai-feedback">
+        <p>{explanation}</p>
+      </div>
+    )}
   </div>
 );
 

@@ -45,9 +45,9 @@ const QuizResult: React.FC<QuizResultProps> = ({ score, totalQuestions, badges, 
     {badges.length > 0 && (
       <div className="badges mt-4">
         <h3>Behaalde badges:</h3>
-        <ul>
+        <ul className="badges-list">
           {badges.map((badge, index) => (
-            <li key={index}>{badge}</li>
+            <li key={index} className="badge-item">{badge}</li>
           ))}
         </ul>
       </div>

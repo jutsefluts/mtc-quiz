@@ -4,75 +4,122 @@
 @tailwind utilities;
 /* eslint-enable */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 :root {
-  --medical-blue: #007bff;
-  --medical-green: #28a745;
-  --medical-red: #dc3545;
-  --medical-gray: #6c757d;
+  --orange: #ff9f1c;
+  --light-orange: #ffbf69;
+  --white: #ffffff;
+  --light-teal: #e0f2f1;
+  --teal: #80cbc4;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: lightblue !important;
+  background-color: var(--white);
   color: #333;
+  font-family: 'Inter', sans-serif;
 }
 
 .medical-container {
-  @apply max-w-xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6;
-  border: 2px solid var(--medical-blue);
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding-top: 3rem; /* Add some top padding to accommodate the header */
+}
+
+/* The actual quiz content container */
+.quiz-content {
+  background-color: transparent;
+  /* No specific styling here, it will inherit from .medical-container */
 }
 
 .medical-title {
-  @apply text-2xl font-bold mb-4 text-center;
-  color: var(--medical-blue);
+  color: var(--teal);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.question-container {
+  background-color: var(--light-teal);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.medical-word {
+  color: var(--teal);
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .medical-button {
-  @apply w-full p-4 rounded-lg transition-all duration-300 font-semibold;
-  background-color: var(--medical-blue);
-  color: white;
+  background-color: var(--teal);
+  color: var(--white);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
 .medical-button:hover {
-  @apply shadow-md transform hover:-translate-y-1;
-  background-color: #0056b3;
+  background-color: #28a99d;
 }
 
-.medical-button-correct {
-  background-color: var(--medical-green);
-  color: white;
+.medical-option {
+  background-color: var(--white);
+  color: #333;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  transition: all 0.3s ease;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.medical-button-incorrect {
-  background-color: var(--medical-red);
-  color: white;
+.medical-option:hover:not(:disabled) {
+  background-color: var(--light-teal);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
-.medical-button-neutral {
-  background-color: #e9ecef;
-  color: var(--medical-gray);
+.medical-option-correct {
+  background-color: var(--light-teal);
+  box-shadow: 0 2px 4px rgba(46, 196, 182, 0.3);
 }
 
-.medical-next-button {
-  @apply mt-4 w-full p-4 font-bold rounded-full transition-all duration-300 transform;
-  background-color: var(--medical-blue);
-  color: white;
+.medical-option-incorrect {
+  background-color: #ffe5e5;
+  box-shadow: 0 2px 4px rgba(255, 99, 71, 0.3);
 }
 
-.medical-next-button:not(:disabled):hover {
-  @apply -translate-y-1 shadow-lg;
-  background-color: #0056b3;
+.ai-feedback {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin-top: 1.5rem;
 }
 
-.medical-score {
-  @apply mt-4 text-center font-semibold text-lg;
-  color: var(--medical-blue);
+.ai-feedback p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555;
 }
 
 .medical-feedback {
-  @apply mt-6 p-6 text-center rounded-full font-semibold;
+  text-align: center;
+  color: var(--teal);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.medical-feedback p {
+  @apply text-blue-800 text-sm leading-relaxed;
 }
 
 .medical-feedback-correct {
@@ -94,49 +141,34 @@ body {
   @apply inline-block w-6 h-6 mr-2;
 }
 
-.medical-option {
-  @apply w-full p-4 text-left rounded-full transition-all duration-300 font-semibold relative;
-  background-color: #e8f0fe;
-  border: 2px solid var(--medical-blue);
-  color: var(--medical-blue);
-}
-
-.medical-option:not(:disabled):hover {
-  @apply shadow-md -translate-y-1;
-  background-color: #d0e3ff;
-}
-
-.medical-option-correct {
-  background-color: var(--medical-green);
-  border-color: var(--medical-green);
-  color: white;
-}
-
-.medical-option-incorrect {
-  background-color: var(--medical-red);
-  border-color: var(--medical-red);
-  color: white;
-}
-
 .medical-option-icon {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
+  @apply absolute right-4 top-1/2 transform -translate-y-1/2 text-xl;
 }
 
 .medical-logout-button {
-  @apply absolute top-1 right-1 text-xs p-1 !important;
-  width: auto !important;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--teal);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.medical-logout-button:hover {
+  background-color: var(--light-teal);
 }
 
 .medical-question-prefix {
-  @apply text-sm text-gray-600 italic;
+  @apply text-sm text-gray-600 mb-2;
 }
 
 .medical-word {
-  @apply text-2xl font-bold text-center text-medical-blue mb-4;
+  @apply text-2xl font-bold text-center mb-6;
+  color: var(--medical-blue);
 }
 
 /* Remove these classes as they're no longer needed
@@ -146,3 +178,229 @@ body {
   display: none;
 }
 */
+
+/* Add these styles to your existing globals.css */
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--teal);
+  transition: width 0.3s ease;
+}
+
+.loading-error {
+  @apply text-red-500 font-semibold mt-4;
+}
+
+.feedback-correct {
+  @apply text-green-600 font-semibold;
+}
+
+.feedback-incorrect {
+  @apply text-red-600 font-semibold;
+}
+
+.badges-list {
+  @apply list-disc list-inside mt-2;
+}
+
+.badge-item {
+  @apply text-blue-600 font-medium;
+}
+
+.auth-button {
+  @apply px-6 py-2 rounded-full text-white font-semibold transition-all duration-300;
+}
+
+.auth-button-signin {
+  background-color: var(--orange);
+}
+
+.auth-button-signin:hover {
+  background-color: var(--light-orange);
+  color: #333; /* Darker text on hover for better contrast */
+}
+
+.auth-button-signup {
+  background-color: var(--teal);
+}
+
+.auth-button-signup:hover {
+  background-color: var(--light-teal);
+  color: #333; /* Darker text on hover for better contrast */
+}
+
+.option-icon {
+  @apply absolute right-3 top-1/2 transform -translate-y-1/2 text-xl;
+}
+
+.option-icon-correct {
+  @apply text-green-500;
+}
+
+.option-icon-incorrect {
+  @apply text-red-500;
+}
+
+.question-container {
+  @apply bg-gray-100 p-6 rounded-lg mb-6;
+}
+
+.medical-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.medical-option {
+  background-color: var(--white);
+  color: #333;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  transition: all 0.3s ease;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.medical-option:hover:not(:disabled) {
+  background-color: var(--light-teal);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.medical-option-correct {
+  background-color: var(--light-teal);
+  box-shadow: 0 2px 4px rgba(46, 196, 182, 0.3);
+}
+
+.medical-option-incorrect {
+  background-color: #ffe5e5;
+  box-shadow: 0 2px 4px rgba(255, 99, 71, 0.3);
+}
+
+.feedback-container {
+  background-color: #f8f9fa;
+  border-left: 4px solid var(--orange);
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-radius: 4px;
+}
+
+.correctness-feedback {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.feedback-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 1rem 0;
+}
+
+.ai-feedback p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+.medical-next-button {
+  background-color: var(--teal);
+  color: var(--white);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.medical-next-button:hover {
+  background-color: #28a99d;
+}
+
+.user-greeting {
+  font-size: 0.9rem;  /* Reduced from 1.2rem */
+  color: #666;  /* A more subtle color */
+  margin-bottom: 0.5rem;  /* Reduced from 1rem */
+  text-align: center;
+  font-weight: normal;  /* Ensure it's not bold */
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: normal;
+  margin: 0; /* Remove any default margins */
+}
+
+.medical-logout-button {
+  font-size: 0.9rem; /* Match the greeting size */
+  padding: 0.3rem 0.6rem; /* Adjust padding to make the button smaller */
+  background-color: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.medical-logout-button:hover {
+  background-color: var(--light-teal);
+}
+
+/* Remove any absolute positioning from the logout button if it exists */
+
+.quiz-progress {
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--teal);
+  transition: width 0.3s ease;
+}
+
+/* Verwijder of pas deze stijlen aan als ze aanwezig zijn */
+.auth-layout {
+  /* Verwijder eventuele stijlen die een statische balk creëren */
+}
+
+.medical-container {
+  /* Zorg ervoor dat er geen onnodige padding of margin bovenaan is */
+}
+
+/* Zorg ervoor dat de progress bar alleen binnen de Quiz component wordt gestijld */
+.quiz-progress .progress-bar {
+  /* Stijlen voor de progress bar */
+}

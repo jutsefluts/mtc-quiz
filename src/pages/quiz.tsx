@@ -2,16 +2,13 @@ import React from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Quiz from '../components/Quiz/Quiz'
-import AuthLayout from '../components/AuthLayout/AuthLayout'
 
 const QuizPage: React.FC = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
 
   if (status === "loading") {
-    return <AuthLayout>
-      <p className="medical-loading">Loading...</p>
-    </AuthLayout>
+    return <p className="medical-loading">Loading...</p>
   }
 
   if (!session) {
@@ -19,11 +16,7 @@ const QuizPage: React.FC = () => {
     return null
   }
 
-  return (
-    <AuthLayout>
-      <Quiz />
-    </AuthLayout>
-  )
+  return <Quiz />
 }
 
 export default QuizPage

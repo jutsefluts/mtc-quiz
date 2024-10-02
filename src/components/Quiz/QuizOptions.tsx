@@ -15,7 +15,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
   showResult, 
   correctAnswer 
 }) => (
-  <div className="space-y-4">
+  <div className="medical-options">
     {options.map((option, index) => (
       <button
         key={index}
@@ -30,11 +30,6 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
         disabled={showResult}
       >
         {option}
-        {showResult && selectedOption === option && (
-          <span className="medical-option-icon">
-            {selectedOption === correctAnswer ? '✓' : '✗'}
-          </span>
-        )}
       </button>
     ))}
   </div>

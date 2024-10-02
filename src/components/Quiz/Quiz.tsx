@@ -49,6 +49,12 @@ const Quiz: React.FC = () => {
     }
   }, [questionKey, quizState]);
 
+  useEffect(() => {
+    if (quizState === 'inProgress') {
+      setProgress((questionCount / words.length) * 100);
+    }
+  }, [questionCount, words.length, quizState]);
+
   async function getUser() {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
@@ -152,10 +158,9 @@ const Quiz: React.FC = () => {
       const allOptions = [correctAnswer, ...otherOptions].sort(() => 0.5 - Math.random());
 
       setOptions(allOptions);
-      setQuestionCount(questionCount + 1);
+      setQuestionCount(prevCount => prevCount + 1);
       setShowResult(false);
       setSelectedOption(null);
-      setProgress((questionCount + 1) / words.length * 100);
     } else {
       endQuiz();
     }
@@ -250,7 +255,7 @@ const Quiz: React.FC = () => {
               <p>Laden van quiz vragen: {loadingProgress}%</p>
             </div>
           )}
-          {feedback && <p className="mt-4 text-red-500">{feedback}</p>}
+          {feedback && <p className="loading-error">{feedback}</p>}
         </div>
       )}
 
@@ -263,6 +268,14 @@ const Quiz: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
+            <div className="quiz-progress">
+              <div className="progress-bar">
+                <div 
+                  className="progress-bar-fill" 
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            </div>
             {currentQuestion && (
               <>
                 <QuizQuestion 

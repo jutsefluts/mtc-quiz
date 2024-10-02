@@ -17,13 +17,12 @@ const Home: NextPage = () => {
   if (!session) {
     return (
       <div className="medical-container">
-        <h1 className="medical-title">Welcome to My Quiz App</h1>
-        <p className="medical-feedback">Please sign in to play the quiz.</p>
+        <p className="medical-feedback">Welkom bij de MTC quiz!</p>
         <nav className="flex justify-center space-x-4 mt-8">
-          <Link href="/auth/signin" className="medical-button medical-button-neutral">
+          <Link href="/auth/signin" className="auth-button auth-button-signin">
             Sign In
           </Link>
-          <Link href="/auth/signup" className="medical-button medical-button-neutral">
+          <Link href="/auth/signup" className="auth-button auth-button-signup">
             Sign Up
           </Link>
         </nav>
@@ -36,8 +35,6 @@ const Home: NextPage = () => {
       <button onClick={() => signOut()} className="medical-button medical-button-neutral medical-logout-button">
         Uitloggen
       </button>
-      <h1 className="medical-title">Welkom bij Mijn Quiz App</h1>
-      <p className="medical-feedback">Hallo, {session?.user?.name || session?.user?.email}!</p>
       <Quiz />
     </div>
   )
