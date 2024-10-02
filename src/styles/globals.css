@@ -7,87 +7,96 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 :root {
-  --medical-blue: #007bff;
-  --medical-green: #28a745;
-  --medical-red: #dc3545;
-  --medical-gray: #6c757d;
+  --primary: #2EC4B6;     /* Turquoise */
+  --secondary: #CBF3F0;   /* Licht turquoise */
+  --accent: #FF9F1C;      /* Oranje */
+  --accent-light: #FFBF69; /* Licht oranje */
+  --text: #333333;        /* Donkergrijs voor tekst */
+  --background: #FFFFFF;  /* Wit */
+  --success: #2EC4B6;     /* Turquoise voor succes */
+  --error: #FF9F1C;       /* Oranje voor fouten */
+  --neutral: #BDC3C7;     /* Licht grijs */
+  --question: #3498DB;    /* Helder blauw voor de quizvraag */
 }
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: lightblue !important;
-  color: #333;
+  color: var(--text);
+  background-color: var(--background);
 }
 
 .medical-container {
-  @apply max-w-xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6;
-  border: 2px solid var(--medical-blue);
+  @apply max-w-xl mx-auto rounded-xl shadow-lg overflow-hidden p-6;
+  background-color: var(--background);
+  /* Verwijder de border */
 }
 
 .medical-title {
-  @apply text-2xl font-bold mb-4 text-center;
-  color: var(--medical-blue);
+  @apply text-2xl font-bold text-center;
+  color: var(--primary);
 }
 
 .medical-button {
-  @apply w-full p-4 rounded-lg transition-all duration-300 font-semibold;
-  background-color: var(--medical-blue);
-  color: white;
+  @apply w-full p-4 rounded-lg transition-all duration-300 font-semibold shadow-sm;
+  background-color: var(--primary);
+  color: var(--background);
 }
 
 .medical-button:hover {
   @apply shadow-md transform hover:-translate-y-1;
-  background-color: #0056b3;
+  background-color: #28B0A3; /* Iets donkerdere versie van primary */
 }
 
 .medical-button-correct {
-  background-color: var(--medical-green);
-  color: white;
+  background-color: var(--success);
+  color: var(--background);
 }
 
 .medical-button-incorrect {
-  background-color: var(--medical-red);
-  color: white;
+  background-color: var(--error);
+  color: var(--background);
 }
 
 .medical-button-neutral {
-  background-color: #e9ecef;
-  color: var(--medical-gray);
+  background-color: var(--secondary);
+  color: var(--text);
 }
 
 .medical-next-button {
   @apply mt-4 w-full p-4 font-bold rounded-full transition-all duration-300 transform;
-  background-color: var(--medical-blue);
-  color: white;
+  background-color: var(--primary);
+  color: var(--background);
 }
 
 .medical-next-button:not(:disabled):hover {
   @apply -translate-y-1 shadow-lg;
-  background-color: #0056b3;
+  background-color: #2C4A68; /* Donkerdere versie van primary */
 }
 
 .medical-score {
   @apply mt-4 text-center font-semibold text-lg;
-  color: var(--medical-blue);
+  color: var(--primary);
 }
 
 .medical-feedback {
-  @apply mt-6 p-6 text-center rounded-full font-semibold;
+  @apply mt-6 p-6 text-center font-semibold;
+  color: var(--text);
+  /* Verwijder eventuele achtergrondkleur hier */
 }
 
 .medical-feedback-correct {
-  background-color: #d4edda;
-  color: var(--medical-green);
+  background-color: var(--success);
+  color: var(--background);
 }
 
 .medical-feedback-incorrect {
-  background-color: #f8d7da;
-  color: var(--medical-red);
+  background-color: var(--error);
+  color: var(--background);
 }
 
 .medical-loading {
   @apply text-center text-xl p-6;
-  color: var(--medical-blue);
+  color: var(--primary);
 }
 
 .medical-icon {
@@ -95,27 +104,25 @@ body {
 }
 
 .medical-option {
-  @apply w-full p-4 text-left rounded-full transition-all duration-300 font-semibold relative;
-  background-color: #e8f0fe;
-  border: 2px solid var(--medical-blue);
-  color: var(--medical-blue);
+  @apply w-full p-4 text-left rounded-full transition-all duration-300 font-semibold relative shadow-sm;
+  background-color: var(--secondary);
+  color: var(--text);
+  /* Verwijder de border */
 }
 
 .medical-option:not(:disabled):hover {
   @apply shadow-md -translate-y-1;
-  background-color: #d0e3ff;
+  background-color: var(--accent-light);
 }
 
 .medical-option-correct {
-  background-color: var(--medical-green);
-  border-color: var(--medical-green);
-  color: white;
+  background-color: var(--success);
+  color: var(--background);
 }
 
 .medical-option-incorrect {
-  background-color: var(--medical-red);
-  border-color: var(--medical-red);
-  color: white;
+  background-color: var(--error);
+  color: var(--background);
 }
 
 .medical-option-icon {
@@ -132,11 +139,15 @@ body {
 }
 
 .medical-question-prefix {
-  @apply text-sm text-gray-600 italic;
+  @apply text-sm italic;
+  color: var(--neutral);
 }
 
 .medical-word {
-  @apply text-2xl font-bold text-center text-medical-blue mb-4;
+  @apply text-2xl font-bold text-center my-6;
+  color: var(--accent);
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 /* Remove these classes as they're no longer needed
@@ -146,3 +157,72 @@ body {
   display: none;
 }
 */
+
+header {
+  background-color: var(--primary);
+  color: var(--background);
+}
+
+header button {
+  background-color: var(--background);
+  color: var(--primary);
+}
+
+header button:hover {
+  background-color: var(--secondary);
+}
+
+.ai-feedback {
+  @apply mt-4 pt-4 border-t border-gray-300;
+  font-style: italic;
+}
+
+/* Verwijder de typewriter en keyframes regels */
+
+.feedback-container {
+  @apply mt-4 p-4 rounded-lg;
+  background-color: var(--secondary);
+  color: var(--text);
+  border-left: 4px solid var(--primary);
+}
+
+.feedback-text {
+  @apply font-semibold mb-2;
+  color: var(--primary);
+}
+
+.ai-feedback {
+  @apply mt-4 pt-4 border-t border-gray-300;
+  color: var(--text);
+  font-style: italic;
+}
+
+.medical-input {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary;
+}
+
+.medical-link {
+  @apply text-primary hover:underline;
+}
+
+.medical-error {
+  @apply text-error mt-2;
+}
+
+@layer utilities {
+  .focus-ring-primary {
+    @apply focus:ring-2 focus:ring-primary;
+  }
+  .text-error {
+    color: var(--error);
+  }
+}
+
+.login-message {
+  @apply mt-6 p-6 text-center font-semibold;
+  color: var(--text);
+}
+
+.text-primary {
+  color: var(--primary);
+}

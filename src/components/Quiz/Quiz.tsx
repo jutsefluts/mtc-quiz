@@ -40,6 +40,10 @@ const Quiz: React.FC = () => {
   }
 
   const startQuiz = async () => {
+    // Reset feedback en uitleg
+    setFeedback(null);
+    setExplanation(null);
+    
     setIsLoading(true);
     setLoadingProgress(0);
     
@@ -108,6 +112,10 @@ const Quiz: React.FC = () => {
   };
 
   const nextQuestion = () => {
+    // Reset feedback en uitleg
+    setFeedback(null);
+    setExplanation(null);
+    
     if (questionCount < words.length) {
       const newQuestion = words[questionCount];
       setCurrentQuestion(newQuestion);
@@ -233,12 +241,14 @@ const Quiz: React.FC = () => {
           >
             {currentQuestion && (
               <>
-                <p className="medical-question-prefix mb-2">
-                  {isQuestionWord ? "Wat hoort er bij..." : "Bij welk woord hoort..."}
-                </p>
-                <h2 className="medical-word mb-6">
-                  {isQuestionWord ? currentQuestion.word : currentQuestion.description}
-                </h2>
+                <div className="question-container">
+                  <p className="medical-question-prefix">
+                    Wat hoort er bij...
+                  </p>
+                  <h2 className="medical-word">
+                    {isQuestionWord ? currentQuestion.word : currentQuestion.description}
+                  </h2>
+                </div>
                 <div className="space-y-4">
                   {options.map((option, index) => (
                     <button
@@ -264,8 +274,14 @@ const Quiz: React.FC = () => {
                 </div>
                 {showResult && (
                   <div className="result">
-                    <p className="mt-4">{feedback}</p>
-                    {explanation && <p className="mt-4">{explanation}</p>}
+                    <div className="feedback-container">
+                      <p className="feedback-text">{feedback}</p>
+                      {explanation && (
+                        <div className="ai-feedback">
+                          <p>{explanation}</p>
+                        </div>
+                      )}
+                    </div>
                     <button onClick={nextQuestion} className="medical-next-button">
                       Volgend Woord
                     </button>

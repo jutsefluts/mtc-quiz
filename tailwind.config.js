@@ -1,13 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
-    "./src/components/**/*.{js,ts,jsx,tsx}",
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+    './src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        'medical-blue': '#007bff', // Use the same hex code as in your CSS variable
+        primary: '#2EC4B6',
+        secondary: '#CBF3F0',
+        accent: '#FF9F1C',
+        'accent-light': '#FFBF69',
       },
     },
   },

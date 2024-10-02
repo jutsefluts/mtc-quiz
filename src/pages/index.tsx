@@ -17,14 +17,14 @@ const Home: NextPage = () => {
   if (!session) {
     return (
       <div className="medical-container">
-        <h1 className="medical-title">Welcome to My Quiz App</h1>
-        <p className="medical-feedback">Please sign in to play the quiz.</p>
+        <h1 className="medical-title">Medische Terminologie Quiz</h1>
+        <p className="login-message">Log in om de quiz te spelen.</p>
         <nav className="flex justify-center space-x-4 mt-8">
           <Link href="/auth/signin" className="medical-button medical-button-neutral">
-            Sign In
+            Inloggen
           </Link>
           <Link href="/auth/signup" className="medical-button medical-button-neutral">
-            Sign Up
+            Registreren
           </Link>
         </nav>
       </div>
@@ -32,13 +32,30 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="medical-container relative">
-      <button onClick={() => signOut()} className="medical-button medical-button-neutral medical-logout-button">
-        Uitloggen
-      </button>
-      <h1 className="medical-title">Welkom bij Mijn Quiz App</h1>
-      <p className="medical-feedback">Hallo, {session?.user?.name || session?.user?.email}!</p>
-      <Quiz />
+    <div className="flex flex-col min-h-screen">
+      <header className="p-4 flex justify-between items-center shadow-sm" style={{
+        backgroundColor: 'var(--primary)',
+        color: 'var(--background)'
+      }}>
+        <p className="text-lg font-semibold">
+          Welkom, {session.user?.name || session.user?.email}!
+        </p>
+        <button 
+          onClick={() => signOut()} 
+          className="px-4 py-2 rounded transition-colors"
+          style={{
+            backgroundColor: 'var(--background)',
+            color: 'var(--primary)'
+          }}
+        >
+          Uitloggen
+        </button>
+      </header>
+      <main className="flex-grow p-4 md:p-8">
+        <div className="medical-container relative">
+          <Quiz />
+        </div>
+      </main>
     </div>
   )
 }
