@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { supabase } from "../../../utils/supabase/api"
+import { supabase } from "@/lib/supabase"
 import bcrypt from 'bcrypt'
 
 declare module "next-auth" {

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { supabase } from '../../../utils/supabase/api';
+import { supabase } from '../../../lib/supabase';
 import bcrypt from 'bcrypt';
 
 // Define the structure of your users table

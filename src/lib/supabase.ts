@@ -1,39 +1,31 @@
 import { createClient } from '@supabase/supabase-js'
 import { QuizWord } from '@/types/quiz'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+console.log('Supabase Anon Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 5) + '...')
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-export async function fetchQuizWords() {
+export async function fetchQuizWords(count: number = 20): Promise<QuizWord[]> {
+  console.log('Fetching quiz words from Supabase...')
   const { data, error } = await supabase
     .from('quiz_words')
     .select('word, description')
-  
+    
   if (error) {
     console.error('Error fetching quiz words:', error)
-    return []
+    throw error
   }
   
-  return data || []
+  // Shuffle the array and slice to get the desired number of words
+  const shuffled = data ? data.sort(() => 0.5 - Math.random()) : []
+  const selected = shuffled.slice(0, count)
+  
+  console.log('Fetched quiz words:', selected)
+  return selected
 }
 
-export async function getQuizWords(): Promise<QuizWord[]> {
-  const { data, error } = await supabase
-    .from('quiz_words')
-    .select('*')
-
-  if (error) {
-    console.error('Error fetching quiz words:', error)
-    return []
-  }
-
-  return data || []
-}
-
-// Voeg hier eventuele andere Supabase-gerelateerde functies toe
+export { supabase }
