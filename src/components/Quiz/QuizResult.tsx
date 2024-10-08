@@ -1,5 +1,5 @@
 import React from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 
 interface QuizResultProps {
   score: number;
@@ -9,7 +9,10 @@ interface QuizResultProps {
 }
 
 const QuizResult: React.FC<QuizResultProps> = ({ score, totalQuestions, badges, restartQuiz }) => {
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   return (
     <div className="end-screen">

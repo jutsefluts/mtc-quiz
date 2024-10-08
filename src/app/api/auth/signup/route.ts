@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { supabase } from '../../../lib/supabase';
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 import bcrypt from 'bcrypt';
 
 // Define the structure of your users table
@@ -11,15 +11,11 @@ interface User {
   created_at: string;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
-  const { email, password, name } = req.body;
+export async function POST(request: Request) {
+  const { email, password, name } = await request.json();
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+    return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
   }
 
   try {
@@ -30,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single();
 
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return NextResponse.json({ message: 'User already exists' }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,9 +45,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const newUser = data as User;
 
-    res.status(201).json({ message: 'User created successfully', userId: newUser.id });
+    return NextResponse.json({ message: 'User created successfully', userId: newUser.id }, { status: 201 });
   } catch (error) {
     console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    return NextResponse.json({ message: 'Error creating user' }, { status: 500 });
   }
 }

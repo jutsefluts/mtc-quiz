@@ -13,7 +13,7 @@ export async function fetchQuizWords(count: number = 20): Promise<QuizWord[]> {
   console.log('Fetching quiz words from Supabase...')
   const { data, error } = await supabase
     .from('quiz_words')
-    .select('word, description')
+    .select('id, word, description')  // Added 'id' to the selection
     
   if (error) {
     console.error('Error fetching quiz words:', error)
