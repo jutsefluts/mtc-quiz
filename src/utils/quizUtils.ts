@@ -1,8 +1,8 @@
 import { UserWordPerformance } from '../types/UserWordPerformance';
 
 export function calculateDifficulty(performance: UserWordPerformance): number {
-  if (performance.totalAttempts === 0) return 1; // New word
-  return 1 - (performance.correctAttempts / performance.totalAttempts);
+  if (performance.total_attempts === 0) return 1; // New word
+  return 1 - (performance.correct_attempts / performance.total_attempts);
 }
 
 export function calculateNextReviewDate(performance: UserWordPerformance): Date {
