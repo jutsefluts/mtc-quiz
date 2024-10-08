@@ -7,8 +7,13 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'medical-blue': '#007bff', // Keeping your custom color
+      },
+    },
   },
   plugins: [],
 };
+
 export default config;

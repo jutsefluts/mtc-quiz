@@ -1,20 +1,28 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 import { User } from '@supabase/supabase-js';
+import { useSession } from 'next-auth/react';
+import type { Session } from 'next-auth';
 import { generateExplanation } from "@/utils/openai";
 import { motion, AnimatePresence } from 'framer-motion';
 import QuizQuestion from './QuizQuestion';
 import QuizOptions from './QuizOptions';
 import QuizFeedback from './QuizFeedback';
 import QuizResult from './QuizResult';
+import Login from '../Login';  // Import the Login component
 
 interface Word {
-  id: number;
+  id: number;  // Changed from string to number
   word: string;
   description: string;
 }
 
 const Quiz: React.FC = () => {
+  const { data: session, status } = useSession();
+  const [isRegistering, setIsRegistering] = useState(false);
+  
   const [quizState, setQuizState] = useState<'start' | 'inProgress' | 'end'>('start');
   const [isLoading, setIsLoading] = useState(false);
   const [words, setWords] = useState<Word[]>([]);
@@ -33,7 +41,10 @@ const Quiz: React.FC = () => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [questionKey, setQuestionKey] = useState(0);
 
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const explanationRequestRef = useRef<AbortController | null>(null);
 
@@ -190,8 +201,8 @@ const Quiz: React.FC = () => {
 
     setShowResult(true);
 
-    if (user && currentQuestion) {
-      await updateUserWordPerformance(user.id, currentQuestion.id.toString(), isCorrect);
+    if (session?.user?.id && currentQuestion) {
+      await updateUserWordPerformance(currentQuestion.id, isCorrect);
     }
 
     if (currentQuestion) {
@@ -226,12 +237,54 @@ const Quiz: React.FC = () => {
     setBadges(newBadges);
   };
 
-  const updateUserWordPerformance = async (userId: string, wordId: string, isCorrect: boolean) => {
-    // Implementeer deze functie om de gebruikersprestaties bij te werken
+  const updateUserWordPerformance = async (wordId: number, isCorrect: boolean) => {
+    if (session?.user?.id) {
+      const { data, error } = await supabase
+        .from('user_word_performance')
+        .upsert({
+          user_id: session.user.id,
+          word_id: wordId,
+          correct_attempts: isCorrect ? 1 : 0,
+          total_attempts: 1,
+          last_review_date: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,word_id'
+        });
+
+      if (error) {
+        console.error('Error updating user word performance:', error);
+      } else {
+        // If the upsert was successful, update the counts using raw SQL
+        const { data: updateData, error: updateError } = await supabase
+          .rpc('update_user_word_performance', {
+            p_user_id: session.user.id,
+            p_word_id: wordId,
+            p_is_correct: isCorrect
+          });
+
+        if (updateError) {
+          console.error('Error updating user word performance counts:', updateError);
+        }
+      }
+    }
   };
 
   if (isLoading) {
     return <div className="medical-container">Bezig met laden van de quiz...</div>;
+  }
+
+  if (status === "loading") {
+    return <p className="medical-loading">Loading...</p>;
+  }
+
+  if (!session) {
+    return (
+      <div className="medical-container">
+        <h1 className="medical-title">Welkom bij de Medische Terminologie Quiz</h1>
+        <p>{isRegistering ? 'Registreer om de quiz te starten.' : 'Log in om de quiz te starten.'}</p>
+        <Login isRegistering={isRegistering} setIsRegistering={setIsRegistering} />
+      </div>
+    );
   }
 
   return (
@@ -239,23 +292,9 @@ const Quiz: React.FC = () => {
       {quizState === 'start' && (
         <div className="start-screen">
           <h1 className="medical-title">Medische Terminologie Quiz</h1>
-          <p className="mb-4">Test je kennis van medische termen!</p>
-          {!isLoading ? (
-            <button onClick={startQuiz} className="medical-button">
-              Start Quiz
-            </button>
-          ) : (
-            <div className="loading-container">
-              <div className="progress-bar">
-                <div 
-                  className="progress-bar-fill" 
-                  style={{ width: `${loadingProgress}%` }}
-                ></div>
-              </div>
-              <p>Laden van quiz vragen: {loadingProgress}%</p>
-            </div>
-          )}
-          {feedback && <p className="loading-error">{feedback}</p>}
+          <button onClick={startQuiz} className="medical-button start-quiz-button">
+            Start Quiz
+          </button>
         </div>
       )}
 
